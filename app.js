@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const StartButton = document.querySelector('#start-button');
     
     const ancho = 10;
+    let newRandom = 0;
 
     //Cargar  tetrominos con sus diferentes rotaciones
     const lTetra=[
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         [ancho, ancho+1, ancho+2, ancho*2+2],
         [1, ancho+1, ancho*2+1, ancho*2],
         [ancho, ancho*2, ancho*2+1, ancho*2+2]
-    ];
+    ]; 
 
     const zTetra=[
         [0,ancho,ancho+1,ancho*2+1],
@@ -52,14 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let actual = tetrominos[random][actualRotation];
     //let actual = tetrominos[0][1];
 
-//Mover el tetromino para abajo
-let intervalo= setInterval(moveDown, 800);
-function moveDown(){
-    unDraw();
-    actualPosition=actualPosition+ancho;
-    draw();
-
-}
 
     //Dibujar el tetromino en el grid
 
@@ -69,12 +62,39 @@ function moveDown(){
         })
     }
 
-    draw();
-
+    //draw();
+//Eliminamos el tetromino del grid
     function unDraw(){
         actual.forEach(index =>{
             squares[actualPosition+index].classList.remove('tetromino');
         })
     }
+
+    
+//Mover el tetromino para abajo
+let intervalo= setInterval(moveDown, 300);
+function moveDown(){
+    unDraw();
+    actualPosition+=ancho;
+    draw();
+    freeze();
+}
+//Congelar tetramino e iniciar nuevo tetramino
+    function freeze(){
+        if(actual.some(index => squares[actualPosition + index + ancho].classList.contains('taken'))) {
+            actual.forEach(index => squares[actualPosition + index].classList.add('taken'));
+            //Inicia nuevo tetramino
+            random = newRandom;
+            console.log(random);
+            newRandom= Math.floor(Math.random()*tetrominos.length);
+            //Seleccion del tetromino aleatoria
+             actual = tetrominos[random][actualRotation];
+             actualPosition = 4;
+            draw();
+        }
+
+    }
+
+    
  
 });
