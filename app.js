@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const grid=document.querySelector('.grid');
     let squares= Array.from(document.querySelectorAll('.grid div'));
-    const ScoreDisplay = document.querySelector('#score');
-    const StartButton = document.querySelector('#start-button');
+    const scoreDisplay = document.querySelector('#score');
+    const startButton = document.querySelector('#start-button');
     
     const ancho = 10;
     let newRandom = 0;
+    let timerId;
 
     //Cargar  tetrominos con sus diferentes rotaciones
     const lTetra=[
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     
 //Mover el tetromino para abajo
-let intervalo= setInterval(moveDown, 300);
+//let intervalo= setInterval(moveDown, 300);
 function moveDown(){
     unDraw();
     actualPosition+=ancho;
@@ -96,5 +97,61 @@ function moveDown(){
     }
 
     
- 
+
+    function moveLeft(){
+        unDraw();
+        const isAtLeftEdge = actual.some(index => (actualPosition + index) % ancho === 0);
+        if(!isAtLeftEdge) actualPosition -= 1;
+
+        if(actual.some(index => squares[actualPosition + index].classList.contains('taken'))) {
+            actualPosition += 1;
+        }
+        draw();
+        
+    }
+    function moveRigth(){
+        unDraw();
+        const isAtRigthEdge = actual.some(index => (actualPosition + index) % ancho === ancho-1);
+        if(!isAtRigthEdge) actualPosition += 1;
+        if(actual.some(index => squares[actualPosition + index].classList.contains('taken'))) {
+            actualPosition -= 1;
+        }
+        draw();
+    }
+
+    function rotate(){
+        unDraw();
+        actualRotation++;
+        if(actualRotation === actual.length) {
+            actualRotation = 0;
+        }
+        actual = tetrominos[random][actualRotation];
+        draw();
+    }
+
+    function control(e){
+        if(e.keyCode === 37){
+            moveLeft();
+        }else if(e.keyCode === 39){
+            moveRigth();
+        }else if(e.keyCode === 40){
+            moveDown();
+        }else if(e.keyCode === 38){
+            rotate();
+        }
+    }
+    document.addEventListener('keyup', control);
+
+    startButton.addEventListener('click', ()=>{
+        if(!timerId){
+            draw();
+            timerId = true;
+            intervalo = setInterval(moveDown, 300);
+        }else {
+            clearInterval(intervalo);
+            timerId = false;
+            intervalo = null;   
+
+        }
+    })
 });
