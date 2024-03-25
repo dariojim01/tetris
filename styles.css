@@ -4,12 +4,14 @@
  display: flex;
  flex-wrap: wrap;
  background-color: cadetblue;   
+
 }
 
 .grid div {
     height: 20px;
     width: 20px;
-   /* background-color: red;*/
+    border-radius: 5px;
+    
 }
 
 .tetromino {

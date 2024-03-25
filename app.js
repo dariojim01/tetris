@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const scoreDisplay = document.querySelector('#score');
     const startButton = document.querySelector('#start-button');
     const reloadButton = document.querySelector('#reload-button');
+    const levelSelect = document.querySelector('#level-select');
+ 
+    let levelOptionSelect;
     
     const ancho = 10;
     let newRandom = 0;
@@ -103,6 +106,7 @@ function moveDown(){
             draw();
             addScore();
             endGame();
+           
         }
 
     }
@@ -153,12 +157,35 @@ function moveDown(){
     }
     document.addEventListener('keyup', control);
 
+    
+    function levelOption(level){
+        
+    }
+
+    levelSelect.addEventListener('change', ()=>{
+        console.log("Seleccion en evento opcioneos"+levelSelect.value);
+        levelOptionSelect=levelSelect.value;
+       
+    });
     //Eveventos de los botones
     startButton.addEventListener('click', ()=>{
         if(!timerId){
             draw();
             timerId = true;
-            intervalo = setInterval(moveDown, 300);
+            //intervalo = setInterval(moveDown, 600);
+            if(levelOptionSelect==='1'){
+
+                intervalo = setInterval(moveDown, 600);
+            }else if(levelOptionSelect==='2'){
+                
+                intervalo = setInterval(moveDown, 400);
+            }else if(levelOptionSelect==='3'){
+                
+                intervalo = setInterval(moveDown, 200);
+            }else{
+                alert("Por favor seleccione un nivel");
+                window.location.reload();
+            }
         }else  {
             clearInterval(intervalo);
             timerId = false;
@@ -180,10 +207,12 @@ function moveDown(){
                 row.forEach(index => {
                     squares[index].classList.remove('taken');
                     squares[index].classList.remove('tetromino');
+                    squares[index].style.backgroundColor='';
                 });
                 const squaresRemoved = squares.splice(i, ancho);
                 squares=squaresRemoved.concat(squares);
                 squares.forEach(cell => grid.appendChild(cell));
+                
             }
         }
     }
@@ -196,7 +225,8 @@ function moveDown(){
             alert('Game Over. Score: '+score);
             scoreDisplay.innerHTML='Game over';
             startButton.setAttribute('hidden', true);
-            reloadButton.removeAttribute('hidden', false);
+           // reloadButton.removeAttribute('hidden', false);
+           
         }
     }
    
