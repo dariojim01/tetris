@@ -215,7 +215,7 @@ function moveDown(){
        
     });
     //Eveventos de los botones
-    startButton.addEventListener('click', ()=>{
+    startButton.addEventListener('touchend', ()=>{
         if(!timerId){
             draw();
             timerId = true;
@@ -241,7 +241,7 @@ function moveDown(){
         }
     })
 
-    reloadButton.addEventListener('click', ()=>{
+    reloadButton.addEventListener('touchend', ()=>{
         window.location.reload();
     })
     });
