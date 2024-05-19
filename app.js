@@ -208,6 +208,42 @@ function moveDown(){
           rotate();
         }
       }
+
+      levelSelect.addEventListener('change', ()=>{
+        console.log("Seleccion en evento opcioneos"+levelSelect.value);
+        levelOptionSelect=levelSelect.value;
+       
+    });
+    //Eveventos de los botones
+    startButton.addEventListener('click', ()=>{
+        if(!timerId){
+            draw();
+            timerId = true;
+            //intervalo = setInterval(moveDown, 600);
+            if(levelOptionSelect==='1'){
+
+                intervalo = setInterval(moveDown, 600);
+            }else if(levelOptionSelect==='2'){
+                
+                intervalo = setInterval(moveDown, 400);
+            }else if(levelOptionSelect==='3'){
+                
+                intervalo = setInterval(moveDown, 200);
+            }else{
+                alert("Por favor seleccione un nivel");
+                window.location.reload();
+            }
+        }else  {
+            clearInterval(intervalo);
+            timerId = false;
+            intervalo = null;   
+
+        }
+    })
+
+    reloadButton.addEventListener('click', ()=>{
+        window.location.reload();
+    })
     });
 
       } else {
