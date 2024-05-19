@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const startButton = document.querySelector('#start-button');
     const reloadButton = document.querySelector('#reload-button');
     const levelSelect = document.querySelector('#level-select');
+    const touchArea = document.getElementById('touchArea');
  
     let levelOptionSelect;
     
@@ -134,6 +135,30 @@ function moveDown(){
         draw();
     }
 
+
+    function isAtRigthEdge(){
+        return actual.some(index => (actualPosition + index+1) % ancho === 0);
+    }
+
+    function isAtLeftEdge(){
+        return actual.some(index => (actualPosition + index) % ancho === 0);
+    }
+
+    function checkRotatePosition(P){
+        P = P || actualPosition;
+        if((P+1) % ancho <4){
+            if(isAtRigthEdge()){
+                actualPosition += 1;
+                checkRotatePosition(P);
+            }
+        }else if(P % ancho > 5){
+            if(isAtLeftEdge()){
+                actualPosition -= 1;
+                checkRotatePosition(P);
+            }
+        }
+    }
+
     function rotate(){
         unDraw();
         actualRotation++;
@@ -141,8 +166,53 @@ function moveDown(){
             actualRotation = 0;
         }
         actual = tetrominos[random][actualRotation];
+        checkRotatePosition();
         draw();
     }
+
+    function isMobile() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      }
+  
+      if (isMobile()) {
+        
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    touchArea.addEventListener('touchstart', function(event) {
+      const touch = event.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    });
+
+    touchArea.addEventListener('touchend', function(event) {
+      const touch = event.changedTouches[0];
+      const touchEndX = touch.clientX;
+      const touchEndY = touch.clientY;
+
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 0) {
+          moveRight();
+        } else {
+          moveLeft();
+        }
+      } else {
+        // Vertical swipe
+        if (deltaY > 0) {
+          moveDown();
+        } else {
+          rotate();
+        }
+      }
+    });
+
+      } else {
+        document.addEventListener('keyup', control);
+      }
 //Eventos del teclado
     function control(e){
         if(e.keyCode === 37){
@@ -155,14 +225,12 @@ function moveDown(){
             rotate();
         }
     }
-    document.addEventListener('keyup', control);
+    //document.addEventListener('keyup', control);
+
+   // const touchArea = document.getElementById('touchArea');
 
     
-    function levelOption(level){
-        
-    }
-
-    levelSelect.addEventListener('change', ()=>{
+      levelSelect.addEventListener('change', ()=>{
         console.log("Seleccion en evento opcioneos"+levelSelect.value);
         levelOptionSelect=levelSelect.value;
        
